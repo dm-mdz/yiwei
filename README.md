@@ -4,8 +4,8 @@
 
 | 软件 | 管什么 | 装在哪 |
 |---|---|---|
-| **一苇输入法**（macOS） | 拼音输入；单击 Shift 切中英文；敲错字母时在第二个候选给出纠正 | `~/Library/Input Methods/Yiwei.app` |
-| **一苇**（macOS） | 截图（⇧⌃A：框选、标注、复制或保存）；键鼠共享 | `~/Applications/Yiwei.app`，在菜单栏右上角 |
+| **一苇输入法**（macOS） | 拼音输入；单击 Shift 切中英文；敲错字母时在第二个候选给出纠正 | `/Library/Input Methods/Yiwei.app`（自己构建的放 `~/Library/Input Methods/`） |
+| **一苇**（macOS） | 截图（⇧⌃A：框选、标注、复制或保存）；键鼠共享 | “应用程序”文件夹，在菜单栏右上角 |
 | **一苇**（Windows） | 键鼠共享 | 一个 `Yiwei.exe`，放哪都行，图标在任务栏右下角 |
 
 互不依赖，要哪个装哪个。
@@ -15,13 +15,24 @@
 - macOS：输入法、截图（标注、点选窗口、长截屏、提取文字）、键鼠共享可用。
 - Windows：键鼠共享可用。
 - 键鼠共享在一台 Mac 加两台 Windows 上用过：几台电脑入一组互相连上，鼠标推过屏幕边缘就到另一台，复制的文字、图片、100MB 以内的文件跟着指针走，也可以直接发文件。
-- 还没做：Linux 版（输入法、截图、键鼠共享都没开始）；边缘防误触（现在一推到边就穿过去）；可以直接下载安装的发布包（现在要自己构建，见下面各节）。
+- 还没做：Linux 版（输入法、截图、键鼠共享都没开始）；边缘防误触（现在一推到边就穿过去）。
+
+## 下载安装
+
+在 [Releases](https://github.com/dm-mdz/yiwei/releases) 下载，要哪个装哪个：
+
+- **一苇输入法**（`Yiwei-IME-版本号.dmg`）：打开后把 Yiwei.app 拖到旁边的“输入法”文件夹上，按提示输入电脑密码。然后在“系统设置 → 键盘 → 输入法”里点加号，添加“一苇”。
+- **一苇**（`Yiwei-版本号.dmg`）：打开后把 Yiwei.app 拖到旁边的“应用程序”文件夹上，再打开它。第一次用截图要允许“屏幕录制”，用键鼠共享要允许“辅助功能”，它会带你去系统设置。
+- **Windows 版**（`Yiwei-Windows-版本号.zip`）：解压后双击 `Yiwei.exe`。exe 还没有微软的签名，第一次打开会弹“Windows 已保护你的电脑”，点“更多信息 → 仍要运行”。
+
+两个 Mac 安装包都经过苹果公证，可以直接打开。要求 macOS 14 以上、Apple 芯片的 Mac。
 
 构建要用到：macOS 14 以上、Xcode 命令行工具（Swift）、Rust。想让构建脚本用你自己的签名身份或者工具链路径，在仓库根目录建一个 `local.env`（不进仓库），例如：
 
 ```sh
-YIWEI_SIGN_ID="Apple Development: 你的名字 (XXXXXXXXXX)"   # 不写就用临时签名，每次重新构建后要重新授权屏幕录制和辅助功能
-LLVM_MINGW="$HOME/llvm-mingw"                               # 编 Windows 版用
+YIWEI_SIGN_ID="Developer ID Application: 你的名字 (XXXXXXXXXX)"   # 不写就用临时签名，每次重新构建后要重新授权屏幕录制和辅助功能
+YIWEI_NOTARY_PROFILE=你的公证配置名                                # tools/release_mac.sh 打发布包时用；xcrun notarytool store-credentials 存的
+LLVM_MINGW="$HOME/llvm-mingw"                                      # 编 Windows 版用
 ```
 
 ## 一苇输入法（macOS）

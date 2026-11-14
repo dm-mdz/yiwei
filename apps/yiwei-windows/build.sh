@@ -10,7 +10,9 @@ MINGW="${LLVM_MINGW:-$HOME/llvm-mingw}"
 export CARGO_TARGET_X86_64_PC_WINDOWS_GNULLVM_LINKER="$MINGW/bin/x86_64-w64-mingw32-clang"
 export WINDRES="$MINGW/bin/x86_64-w64-mingw32-windres"
 # 运行库静态链进去：只交一个 exe，Windows 10/11 上不用另装东西
-export CARGO_TARGET_X86_64_PC_WINDOWS_GNULLVM_RUSTFLAGS="-C target-feature=+crt-static"
+# 把本机的文件夹路径从 exe 里换掉（Rust 会把源码路径写进报错信息里），发出去的 exe 不带本机路径
+ROOT="$(cd ../.. && pwd)"; CH="${CARGO_HOME:-$HOME/.cargo}"
+export CARGO_TARGET_X86_64_PC_WINDOWS_GNULLVM_RUSTFLAGS="-C target-feature=+crt-static --remap-path-prefix=$CH=/cargo --remap-path-prefix=$ROOT=/yiwei"
 "${CARGO:-cargo}" build --release --offline --target x86_64-pc-windows-gnullvm "$@"
 OUT=target/x86_64-pc-windows-gnullvm/release/Yiwei.exe
 echo "built: $OUT ($(wc -c < "$OUT") bytes)"
