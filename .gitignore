@@ -1,0 +1,9 @@
+build/
+target/
+.DS_Store
+# 本机自己的设置（签名身份、工具链在哪），不进仓库
+local.env
+# tools/make_public.sh 导出的公开副本里的记号
+.yiwei-public
+# 雾凇拼音词库（GPL-3.0）不放进仓库，用 tools/get_dict.sh 下载
+third_party/rime-ice/

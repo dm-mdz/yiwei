@@ -1,0 +1,18 @@
+# 一苇输入法：全局默认配置
+config_version: "0.1"
+
+schema_list:
+  - schema: yiwei
+
+menu:
+  page_size: 7
+
+ascii_composer:
+  good_old_caps_lock: true
+  switch_key:
+    Shift_L: commit_code
+    Shift_R: commit_code
+    Control_L: noop
+    Control_R: noop
+    Caps_Lock: clear
+    Eisu_toggle: clear

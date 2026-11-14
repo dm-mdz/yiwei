@@ -1,0 +1,20 @@
+[package]
+name = "yiwei-windows"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "一苇 Windows 版：键鼠共享（托盘程序）"
+
+[[bin]]
+name = "Yiwei"
+path = "src/main.rs"
+
+[dependencies]
+yiwei-core = { path = "../../core" }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

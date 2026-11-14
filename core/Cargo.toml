@@ -1,0 +1,17 @@
+[package]
+name = "yiwei-core"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "一苇键鼠共享的核心：三个系统共用的协议、位置关系和按键对照"
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+
+[dependencies]
+# 加密握手和加密通信（Noise 协议）。下面两个是它本来就带的库，这里直接用来算校验和取随机数
+snow = "0.9"
+sha2 = "0.10"
+getrandom = "0.2"
+# 加入一组时核对校验码（SPAKE2：码不在网络上传，猜不出来）。MIT / Apache-2.0
+spake2 = "0.4"

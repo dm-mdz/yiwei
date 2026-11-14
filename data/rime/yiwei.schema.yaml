@@ -1,0 +1,143 @@
+# 一苇拼音方案
+# 拼写规则沿用 rime-pinyin-simp（Apache-2.0）。词库 yiwei 由 tools/make_dict.py 在构建时生成：
+# 默认用自带的 pinyin_simp（源自 Android 开源拼音，Apache-2.0）；装了雾凇拼音（GPL-3.0）就用雾凇，见 README“词库”一节
+schema:
+  schema_id: yiwei
+  name: 一苇拼音
+  version: "0.2"
+  description: 一苇输入法的简体拼音方案
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中, 英 ]
+  - name: full_shape
+    reset: 0
+    states: [ 半角, 全角 ]
+  - name: ascii_punct
+    reset: 0
+    states: [ 中文标点, 英文标点 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - script_translator
+  filters:
+    - uniquifier
+
+menu:
+  page_size: 7
+
+ascii_composer:
+  good_old_caps_lock: true
+  switch_key:
+    Shift_L: commit_code
+    Shift_R: commit_code
+    Control_L: noop
+    Control_R: noop
+    Caps_Lock: clear
+    Eisu_toggle: clear
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " '"
+  algebra:
+    - erase/^hm$/
+    - erase/^m$/
+    - erase/^n$/
+    - erase/^ng$/
+    - abbrev/^([a-z]).+$/$1/
+    - abbrev/^([zcs]h).+$/$1/
+    - derive/^([nl])ue$/$1ve/
+    - derive/^([jqxy])u/$1v/
+    # >>> 纠错规则（由 tools/gen_typo_rules.py 生成，不要手改）
+    - fuzz/^(?=(?:ban|bang|ben|beng|bin|bing|can|cang|cen|ceng|chua|cong|cun|dan|dang|den|deng|ding|dong|dun|fan|fang|fen|feng|gai|gan|gang|gei|gen|geng|gong|gui|gun|hai|han|hang|hei|hen|heng|hong|hui|hun|jia|jian|jiang|jiao|jie|jin|jing|jiong|juan|jue|jun|kai|kan|kang|kei|ken|keng|kong|kui|kun|lan|lang|leng|lin|ling|long|lun|lv|man|mang|men|meng|min|ming|nang|neng|nin|ning|nong|nv|pan|pang|pen|peng|pin|ping|qia|qian|qiang|qiao|qie|qin|qing|qiong|quan|que|qun|ran|rang|reng|rong|run|san|sang|sen|seng|shei|shua|song|sun|tan|tang|teng|ting|tong|tun|wai|wan|wang|wei|wen|weng|xia|xian|xiang|xiao|xie|xin|xing|xiong|xuan|xue|xun|yan|yang|yin|ying|yong|yun|zan|zang|zen|zeng|zhua|zong|zun)$)([a-z]{0})([a-z])([a-z])([a-z]*)$/$1$3$2$4/
+    - fuzz/^(?=(?:ang|bang|beng|biang|bing|cang|cao|ceng|chai|chan|chang|chen|cheng|chong|chou|chui|chun|cong|cuan|cui|dang|dao|deng|ding|dong|duan|eng|fang|fei|feng|fiao|gai|gei|gong|gua|guai|guan|guang|gui|hai|hang|hao|hei|heng|hong|hua|huai|huan|huang|hui|jian|jiang|jiao|jing|jiong|jiu|juan|jue|kai|kang|kao|kei|keng|kong|kua|kuai|kuan|kuang|kui|lang|leng|liang|ling|liu|long|luan|lue|mang|meng|ming|miu|niang|niu|nong|nuan|nue|pang|peng|ping|qian|qiang|qiao|qing|qiong|qiu|quan|que|rong|rua|ruan|rui|sang|sao|seng|shai|shan|shang|shei|shen|sheng|shou|shui|shun|song|suan|sui|tang|tao|teng|ting|tong|tuan|tui|wai|wang|wei|weng|xian|xiang|xiao|xing|xiong|xiu|xuan|xue|yang|ying|yong|yuan|yue|zang|zao|zeng|zhai|zhan|zhang|zhei|zhen|zheng|zhong|zhou|zhui|zhun|zong|zuan|zui)$)([a-z]{1})([a-z])([a-z])([a-z]*)$/$1$3$2$4/
+    - fuzz/^(?=(?:bang|beng|bing|cang|ceng|chan|chang|chao|chen|cheng|chong|chua|chuai|chuan|chuang|chui|chun|cong|dang|deng|ding|dong|fang|feng|fiao|gang|geng|gong|hang|heng|hong|jing|kang|keng|kong|lang|leng|ling|long|mang|meng|ming|nang|neng|ning|nong|pang|peng|ping|qing|rang|reng|rong|sang|seng|shan|shang|shao|shen|sheng|shua|shuai|shuan|shuang|shui|shun|song|tang|teng|ting|tong|wang|weng|xing|yang|ying|yong|zang|zeng|zhan|zhang|zhao|zhen|zheng|zhong|zhua|zhuai|zhuan|zhuang|zhui|zhun|zong)$)([a-z]{2})([a-z])([a-z])([a-z]*)$/$1$3$2$4/
+    - fuzz/^(?=(?:biang|chang|cheng|chong|guang|huang|jiang|jiong|kuang|liang|niang|qiang|qiong|shang|sheng|xiang|xiong|zhang|zheng|zhong)$)([a-z]{3})([a-z])([a-z])([a-z]*)$/$1$3$2$4/
+    - fuzz/^(?=(?:chuang|shuang|zhuang)$)([a-z]{4})([a-z])([a-z])([a-z]*)$/$1$3$2$4/
+    - fuzz/^(?=(?:bang|beng|bing|cang|ceng|cong|dang|deng|ding|dong|fang|feng|gang|geng|gong|hang|heng|hong|jing|jiong|kang|keng|kong|lang|leng|ling|long|mang|meng|ming|nang|neng|ning|nong|pang|peng|ping|qing|qiong|rang|reng|rong|sang|seng|song|tang|teng|ting|tong|wang|weng|xing|xiong|yang|ying|yong|zang|zeng|zong)$)([a-z]{1})[a-z]([a-z]*)$/$1$2/
+    - fuzz/^(?=(?:beng|chan|chang|chen|cheng|chong|chun|cong|dong|feng|fiao|hong|kong|peng|shan|shang|shen|sheng|shun|song|tong|weng|zhan|zhang|zhen|zheng|zhong|zhun|zong)$)([a-z]{2})[a-z]([a-z]*)$/$1$2/
+    - fuzz/^(?=(?:chong|zhong)$)([a-z]{3})[a-z]([a-z]*)$/$1$2/
+    - fuzz/^(?=(?:ai|ang|bei|ben|beng|bi|bian|biang|biao|bie|bin|bing|bu|cha|chai|chan|chang|chao|che|chen|cheng|chi|chong|chou|chu|chua|chuai|chuan|chuang|chui|chun|chuo|ci|cong|cou|cu|cuan|cui|cun|cuo|di|dia|dian|diao|die|ding|diu|dong|dou|du|duan|dui|dun|duo|ei|eng|fei|fen|feng|fiao|fu|gong|gu|gua|guai|guan|guang|gui|gun|guo|hong|hou|hu|hua|huai|huan|huang|hui|hun|huo|ji|jia|jian|jiang|jiao|jie|jin|jing|jiong|jiu|ju|juan|jue|jun|kong|kou|ku|kua|kuai|kuan|kuang|kui|kun|kuo|li|lia|lian|liang|liao|lie|lin|ling|liu|long|lu|luan|lue|lun|luo|lv|mi|mian|miao|mie|min|ming|miu|mu|ni|nian|niang|niao|nie|nin|ning|niu|nong|nu|nuan|nue|nuo|nv|ou|pei|pen|peng|pi|pian|piao|pie|pin|ping|pu|qi|qia|qian|qiang|qiao|qie|qin|qing|qiong|qiu|qu|quan|que|qun|ri|rong|ru|rua|ruan|rui|run|ruo|sha|shai|shan|shang|shao|she|shei|shen|sheng|shi|shou|shu|shua|shuai|shuan|shuang|shui|shun|shuo|si|song|sou|su|suan|sui|sun|suo|ti|tian|tiao|tie|ting|tong|tou|tu|tuan|tui|tun|tuo|wei|wen|weng|wu|xi|xia|xian|xiang|xiao|xie|xin|xing|xiong|xiu|xu|xuan|xue|xun|yi|yin|ying|yong|yu|yuan|yue|yun|zha|zhai|zhan|zhang|zhao|zhe|zhei|zhen|zheng|zhi|zhong|zhou|zhu|zhua|zhuai|zhuan|zhuang|zhui|zhun|zhuo|zi|zong|zou|zu|zuan|zui|zun|zuo)$)([a-z]{1})([a-z])([a-z]*)$/$1$2$2$3/
+    - fuzz/^(?=(?:bai|bang|bei|beng|bing|cai|cang|cei|ceng|chi|chong|chou|chu|chua|chuai|chuan|chuang|chui|chun|chuo|cong|cou|cui|dai|dang|dei|deng|ding|diu|dong|dou|dui|fang|fei|feng|fiao|fou|gai|gang|gei|geng|gong|gou|gui|hai|hang|hei|heng|hong|hou|hui|jing|jiong|jiu|kai|kang|kei|keng|kong|kou|kui|lai|lang|lei|leng|ling|liu|long|lou|mai|mang|mei|meng|ming|miu|mou|nai|nang|nei|neng|ning|niu|nong|nou|pai|pang|pei|peng|ping|pou|qing|qiong|qiu|rang|reng|rong|rou|rui|sai|sang|seng|shi|shou|shu|shua|shuai|shuan|shuang|shui|shun|shuo|song|sou|sui|tai|tang|tei|teng|ting|tong|tou|tui|wai|wang|wei|weng|xing|xiong|xiu|yang|ying|yong|you|zai|zang|zei|zeng|zhi|zhong|zhou|zhu|zhua|zhuai|zhuan|zhuang|zhui|zhun|zhuo|zong|zou|zui)$)([a-z]{2})([a-z])([a-z]*)$/$1$2$2$3/
+    - fuzz/^(?=(?:biang|chai|chang|cheng|chong|chou|chui|guai|guang|huai|huang|jiang|jiong|kuai|kuang|liang|niang|qiang|qiong|shai|shang|shei|sheng|shou|shui|xiang|xiong|zhai|zhang|zhei|zheng|zhong|zhou|zhui)$)([a-z]{3})([a-z])([a-z]*)$/$1$2$2$3/
+    - fuzz/^(?=(?:chuai|chuang|shuai|shuang|zhuai|zhuang)$)([a-z]{4})([a-z])([a-z]*)$/$1$2$2$3/
+    # <<< 纠错规则
+
+translator:
+  dictionary: yiwei
+  user_dict: pinyin_simp      # 个人词库沿用原来的名字：换词库不丢已经学会的词
+  prism: yiwei
+  preedit_format:
+    - xform/([nl])v/$1ü/
+    - xform/([nl])ue/$1üe/
+    - xform/([jqxy])v/$1u/
+
+punctuator:
+  full_shape: &punct
+    ",": { commit: "，" }
+    ".": { commit: "。" }
+    "<": { commit: "《" }
+    ">": { commit: "》" }
+    "/": "、"
+    "?": { commit: "？" }
+    ";": { commit: "；" }
+    ":": { commit: "：" }
+    "'": { pair: [ "‘", "’" ] }
+    "\"": { pair: [ "“", "”" ] }
+    "\\": "、"
+    "|": "｜"
+    "`": "·"
+    "~": "～"
+    "!": { commit: "！" }
+    "@": "@"
+    "#": "#"
+    "%": "%"
+    "$": "￥"
+    "^": { commit: "……" }
+    "&": "&"
+    "*": "*"
+    "(": "（"
+    ")": "）"
+    "-": "-"
+    "_": "——"
+    "+": "+"
+    "=": "="
+    "[": "【"
+    "]": "】"
+    "{": "「"
+    "}": "」"
+  half_shape: *punct
+
+key_binder:
+  bindings:
+    - { when: paging, accept: minus, send: Page_Up }
+    - { when: has_menu, accept: equal, send: Page_Down }
+    - { when: paging, accept: comma, send: Page_Up }
+    - { when: has_menu, accept: period, send: Page_Down }
+    - { when: paging, accept: bracketleft, send: Page_Up }
+    - { when: has_menu, accept: bracketright, send: Page_Down }
+    - { when: has_menu, accept: Tab, send: Right }
+    - { when: has_menu, accept: Shift+Tab, send: Left }
+
+recognizer:
+  patterns:
+    email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
+    uppercase: "[A-Z][-_+.'0-9A-Za-z]*$"
+    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
